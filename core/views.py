@@ -48,6 +48,8 @@ def is_valid_form(values):
 
 
 class CheckoutView(View):
+
+    # get() is used when we recive GET request
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
@@ -80,6 +82,8 @@ class CheckoutView(View):
         except ObjectDoesNotExist:
             messages.info(self.request, "You do not have an active order")
             return redirect("core:checkout")
+
+    # post() is used when we recive POST request
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -357,7 +361,7 @@ class PaymentView(View):
 
 class HomeView(ListView):
     model = Item
-    paginate_by = 10
+    paginate_by = 10  # number of products in a sigle page
     template_name = "home.html"
 
 
@@ -379,18 +383,21 @@ class ItemDetailView(DetailView):
     template_name = "product.html"
 
 
-@login_required
+@login_required  # user have to be logged in to call these functions
 def add_to_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
+
+    # checking if the user has order
     order_item, created = OrderItem.objects.get_or_create(
         item=item,
-        user=request.user,
+        user=request.user,  # checking if the user is users who logged in*
+        # checking if the item is already purchased (so not to add to cart)
         ordered=False
     )
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs[0]
-        # check if the order item is in the order
+        # check if the order item is in the order (kart)
         if order.items.filter(item__slug=item.slug).exists():
             order_item.quantity += 1
             order_item.save()
@@ -409,7 +416,7 @@ def add_to_cart(request, slug):
         return redirect("core:order-summary")
 
 
-@login_required
+@login_required  # user have to be logged in to call these functions
 def remove_from_cart(request, slug):
     item = get_object_or_404(Item, slug=slug)
     order_qs = Order.objects.filter(
