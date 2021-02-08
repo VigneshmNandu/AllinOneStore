@@ -26,6 +26,19 @@ ADDRESS_CHOICES = (
     ('S', 'Shipping'),
 )
 
+# adding Scraping
+
+
+class Search(models.Model):
+    search = models.CharField(max_length=500, blank=True, null=True)
+    created = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{}'.format(self.search)
+
+    class Meta:
+        verbose_name_plural = "Searches"
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(

@@ -1,7 +1,9 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
-  <main>
+
+
+<main>
     <div class="container">
     
 
@@ -60,7 +62,7 @@
 
         <div class="row wow fadeIn">
 
-          {% for item in object_list %}
+          {% for product in total_products %}
           <div class="col-lg-3 col-md-6 mb-4">
 
             <div class="card">
@@ -70,9 +72,11 @@
 
 
                 {% comment %} <img src="{{ item.image.url }}" class="card-img-top"> {% endcomment %}
-                <img src="{{ item.image }}" class="card-img-top">
-                <a href="{{ item.get_absolute_url }}">
-                  <div class="mask rgba-white-slight"></div>
+                <img src="{{ product.4 }}" class="card-img-top">
+
+                <a href="{{ product.3 }}"> <!--Product link-->
+
+                  <div class="mask rgba-black-slight"></div> <!--Slight darken it while hovering image-->
                 </a>
               </div>
 
@@ -82,21 +86,19 @@
                 </a>
                 
                 <h5>
-                  <strong>
-                    <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.title }}
+                  <strong><!--Product Title-->
+                    <a href="{{ product.3 }}" class="dark-grey-text">{{ product.0 }}
                       {% comment %} <span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span> {% endcomment %}
                     </a>
                   </strong>
                 </h5>
 
-                {% comment %} if item has discount_price then ... {% endcomment %}
+                <!--Product Price-->
                 <h4 class="font-weight-bold blue-text">
-                  <strong>₹
-                  {% if item.discount_price %}
-                  {{ item.discount_price }}
-                  {% else %}
-                  {{ item.price }}
-                  {% endif %}
+                  <strong>₹ 
+                
+                  {{ product.1 }}
+                  
                   </strong>
                 </h4>
 
@@ -109,45 +111,9 @@
         </div>
 
       </section>
-      <!--Section: Products v.3-->
-
-      <!--Pagination-->
-
-      {% if is_paginated %}
-      <nav class="d-flex justify-content-center wow fadeIn">
-        <ul class="pagination pg-blue">
-
-          {% if page_obj.has_previous %} <!--Show left arrow-->
-          <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span> <!--&laquo; is left arrow-->
-              <span class="sr-only">Previous</span>
-            </a>
-          </li>
-          {% endif %}
-
-          <li class="page-item active">
-            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-
-          <!--Show right arrow-->
-          {% if page_obj.has_next %} 
-          <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span><!--&raquo; is left arrow-->
-              <span class="sr-only">Next</span>
-            </a>
-          </li>
-          {% endif %}
-        </ul>
-      </nav>
-      {% endif %}
 
     </div>
   </main>
 
+</div>
 {% endblock content %}
-
-

@@ -1,10 +1,12 @@
-# from . import models
-# from django.shortcuts import render
-# from requests.compat import quote_plus
-# import requests
-# from bs4 import BeautifulSoup
-# from selenium.webdriver.chrome.options import Options
-# from selenium import webdriver
+from django.http import HttpResponse
+from . import models
+
+from django.shortcuts import render
+from requests.compat import quote_plus
+import requests
+from bs4 import BeautifulSoup
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
 import random
 import string
 
@@ -23,9 +25,6 @@ from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
-
-
-# from bs4 import BeautifulSoup
 
 
 def create_ref_code():
@@ -538,93 +537,101 @@ class RequestRefundView(View):
 
 # adding scraping
 
-# BASE_AMAZON_URL = 'https://www.amazon.in/s?k={}'
+BASE_AMAZON_URL = 'https://www.amazon.in/s?k={}'
 
 
-# def home(request):
-#     return render(request, 'index.html')
+def home(request):
+    return render(request, 'base.html')
 
-#     def new_search(request):
 
-#     search = request.POST.get('searchBox')
-#     models.Search.objects.create(search=search)
-#     print(quote_plus(search))
-#     final_url = BASE_AMAZON_URL.format(quote_plus(search))
-#     print(final_url)
+def new_search(request):
 
-#     options = Options()
-#     options.add_argument("--headless")
+    search = request.POST.get('searchBox')
+    models.Search.objects.create(search=search)
+    print(quote_plus(search))
+    final_url = BASE_AMAZON_URL.format(quote_plus(search))
+    print(final_url)
 
-#     CHROMEDRIVER = '/home/vigu/Downloads/chromedriver_linux64/chromedriver'
-#     browser = webdriver.Chrome(CHROMEDRIVER, options=options)
-#     browser.get(final_url)
+    options = Options()
+    options.add_argument("--headless")
 
-#     html = browser.page_source
+    CHROMEDRIVER = '/home/vigu/Downloads/chromedriver_linux64/chromedriver'
+    browser = webdriver.Chrome(CHROMEDRIVER, options=options)
+    browser.get(final_url)
 
-#     soup = BeautifulSoup(html, 'lxml')
+    html = browser.page_source
 
-#     product_group = soup.find_all(
-#         'div', {'data-asin': True, 'data-component-type': 's-search-result'})
-#     print(len(product_group))
+    soup = BeautifulSoup(html, 'lxml')
 
-#     total_products = []
+    product_group = soup.find_all(
+        'div', {'data-asin': True, 'data-component-type': 's-search-result'})
+    print(len(product_group))
 
-#     for product in product_group:
-#         # card.find('h2').text
-#         # print(card.h2.text)
+    total_products = []
 
-#         # image_link = card.find('div' , class_='a-section aok-relative s-image-fixed-height')
+    for product in product_group:
+        # card.find('h2').text
+        # print(card.h2.text)
 
-#         # rating = card.find('i', class_='a-icon a-icon-star-small')
+        # image_link = card.find('div' , class_='a-section aok-relative s-image-fixed-height')
 
-#         # product_rating_div = card.find('div', class_='a-row a-size-small')
+        # rating = card.find('i', class_='a-icon a-icon-star-small')
 
-#         h2 = product.h2  # to get h2 tag for a card (product block)
+        # product_rating_div = card.find('div', class_='a-row a-size-small')
 
-#         product_titles = h2.text.strip()
-#         product_link = h2.a.get('href')
+        h2 = product.h2  # to get h2 tag for a card (product block)
 
-#         if product.find('span', class_='a-price-whole'):
-#             product_price = product.find('span', class_='a-price-whole').text
-#             product_price = ''.join(product_price.split(','))
-#         else:
-#             product_price = 'N/A'
+        product_titles = h2.text.strip()
+        product_link = h2.a.get('href')
 
-#         if product.find('img', class_='s-image'):
-#             product_image_link = product.find(
-#                 'img', class_='s-image').get('src')
-#         else:
-#             product_image_link = 'N/A'
+        if product.find('span', class_='a-price-whole'):
+            product_price = product.find(
+                'span', class_='a-price-whole').text
+            product_price = ''.join(product_price.split(','))
+        else:
+            product_price = 'N/A'
 
-#         if product.find('div', class_='a-row a-size-small'):
-#             product_rating_div = product.find(
-#                 'div', class_='a-row a-size-small')
-#             product_rating = product_rating_div.find(
-#                 'a', class_='a-popover-trigger a-declarative').text
-#             product_rating = product_rating.split('out')
-#             product_rating = product_rating[0]
-#         else:
-#             product_rating = 'N/A'
+        if product.find('img', class_='s-image'):
+            product_image_link = product.find(
+                'img', class_='s-image').get('src')
+        else:
+            product_image_link = 'N/A'
 
-#         if h2.a.get('href'):
-#             product_link = 'https://www.amazon.in/' + h2.a.get('href')
-#         else:
-#             product_link = 'N/A'
+        if product.find('div', class_='a-row a-size-small'):
+            product_rating_div = product.find(
+                'div', class_='a-row a-size-small')
+            product_rating = product_rating_div.find(
+                'a', class_='a-popover-trigger a-declarative').text
+            product_rating = product_rating.split('out')
+            product_rating = product_rating[0]
+        else:
+            product_rating = 'N/A'
 
-#         # print(product_titles)
-#         print(product_rating)
-#         print('-------------')
-#         print('-------------')
-#         print('-------------')
-#         # print(product_price)
-#         # print(url)
-#         # print(image_link)
+        if h2.a.get('href'):
+            product_link = 'https://www.amazon.in/' + h2.a.get('href')
+        else:
+            product_link = 'N/A'
 
-#         total_products.append((product_titles, product_price,
-#                                product_rating, product_link, product_image_link))
+        # print(product_titles)
+        print(product_rating)
+        print('-------------')
+        print('-------------')
+        print('-------------')
+        # print(product_price)
+        # print(url)
+        # print(image_link)
 
-#     stuff_for_frontend = {
-#         'search': search,
-#         'total_products': total_products,
-#     }
-#     return render(request, 'my_app/new_search.html', stuff_for_frontend)
+        total_products.append((product_titles, product_price,
+                               product_rating, product_link, product_image_link))
+
+    stuff_for_frontend = {
+        'search': search,
+        'total_products': total_products,
+    }
+    return render(request, 'my_app/new_search.html', stuff_for_frontend)
+
+    # stuff_for_frontend = {
+    #     'search': 'hai',
+    #     'total_products': 'testing',
+    # }
+    # return render(request, 'checkout.html', stuff_for_frontend)

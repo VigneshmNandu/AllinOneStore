@@ -1,4 +1,8 @@
 from django.urls import path
+
+# adding Scrapying
+from .views import new_search, home
+
 from .views import (
     ItemDetailView,
     CheckoutView,
@@ -9,7 +13,9 @@ from .views import (
     remove_single_item_from_cart,
     PaymentView,
     AddCouponView,
-    RequestRefundView
+    RequestRefundView,
+    # new_search,
+
 )
 
 app_name = 'core'
@@ -28,5 +34,6 @@ urlpatterns = [
     path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
 
     # adding scraping
-    # path('new_search', views.new_search, name='new_search'),
+    path('new_search/', new_search, name='new_search'),
+    path('test/', home, name='home'),
 ]
