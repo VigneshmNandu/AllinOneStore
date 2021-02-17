@@ -9,6 +9,9 @@ urlpatterns = [
     path('', include('core.urls', namespace='core'))
 ]
 
+# url mapping when working in development (mainly for showing addition error messages)
+# if DEBUG = True (inside settngs) for development environment
+# we will set DEBUG = False when moved to Production
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]

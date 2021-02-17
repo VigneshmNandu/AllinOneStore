@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Item, OrderItem, Order, Payment, Coupon, Refund, Address, UserProfile
+from .models import Item, OrderItem, Order, Payment, Coupon, Refund, Address, UserProfile, Search
 
 
 def make_refund_accepted(modeladmin, request, queryset):
@@ -10,7 +10,12 @@ def make_refund_accepted(modeladmin, request, queryset):
 make_refund_accepted.short_description = 'Update orders to refund granted'
 
 
+# creating classes so that we can add filters and show what data to be show in database
+
+# OrderAdmin class is used to show how the data base should be displayed, what are the filter options etc
 class OrderAdmin(admin.ModelAdmin):
+
+    # list_diaplay is the name each column to be shown in Order database
     list_display = ['user',
                     'ordered',
                     'being_delivered',
@@ -55,7 +60,17 @@ class AddressAdmin(admin.ModelAdmin):
     search_fields = ['user', 'street_address', 'apartment_address', 'zip']
 
 
-admin.site.register(Item)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'category',
+        'label',
+        'price',
+        'discount_price',
+    ]
+
+
+admin.site.register(Item, ItemAdmin)
 admin.site.register(OrderItem)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Payment)
@@ -63,3 +78,4 @@ admin.site.register(Coupon)
 admin.site.register(Refund)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(UserProfile)
+admin.site.register(Search)

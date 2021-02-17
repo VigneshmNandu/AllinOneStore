@@ -61,6 +61,7 @@ class Item(models.Model):
     description = models.TextField()
     # image = models.ImageField()
     image = models.CharField(max_length=100)
+    # also want to add product link variable
 
     def __str__(self):
         return self.title
