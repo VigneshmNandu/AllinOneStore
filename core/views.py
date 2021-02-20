@@ -537,7 +537,8 @@ class RequestRefundView(View):
 
 # adding scraping
 
-BASE_AMAZON_URL = 'https://www.amazon.in/s?k={}'
+# BASE_AMAZON_URL = 'https://www.amazon.in/s?k={}'
+BASE_AMAZON_URL = 'https://www.google.com/search?biw=1517&bih=742&tbm=shop&q={}'
 
 
 def home(request):
@@ -545,7 +546,6 @@ def home(request):
 
 
 def new_search(request):
-
     search = request.POST.get('searchBox')
     models.Search.objects.create(search=search)
     print(quote_plus(search))
@@ -563,75 +563,207 @@ def new_search(request):
 
     soup = BeautifulSoup(html, 'lxml')
 
-    product_group = soup.find_all(
-        'div', {'data-asin': True, 'data-component-type': 's-search-result'})
+    product_group = soup.find_all('div', class_='KZmu8e')
+    # product_group = soup.find_all('a', class_='shntl sh-np__click-target')
     print(len(product_group))
 
     total_products = []
 
+    # scraping top and bottom sections products
     for product in product_group:
-        # card.find('h2').text
-        # print(card.h2.text)
 
-        # image_link = card.find('div' , class_='a-section aok-relative s-image-fixed-height')
+        product_link = product.a.get('href')
+        product_title = product.find(
+            'div', class_='sh-np__product-title translate-content').text
 
-        # rating = card.find('i', class_='a-icon a-icon-star-small')
-
-        # product_rating_div = card.find('div', class_='a-row a-size-small')
-
-        h2 = product.h2  # to get h2 tag for a card (product block)
-
-        product_titles = h2.text.strip()
-        product_link = h2.a.get('href')
-
-        if product.find('span', class_='a-price-whole'):
+        if product.find('span', class_='T14wmb'):
             product_price = product.find(
-                'span', class_='a-price-whole').text
+                'span', class_='T14wmb').text
             product_price = ''.join(product_price.split(','))
         else:
             product_price = 'N/A'
 
-        if product.find('img', class_='s-image'):
+        # if product.find('img', class_='s-image'):
+        #     product_image_link = product.find(
+        #         'img', class_='s-image').get('src')
+        # else:
+        #     product_image_link = 'N/A'
+
+        # if product.img.get('src'):
+        #     product_image_link = product.img.get('src')
+        # else:
+        #     product_image_link = 'N/A'
+
+        if product.find('div', class_='sh-np__seller-container'):
+            product_seller = product.find(
+                'div', class_='sh-np__seller-container').text
+        else:
+            product_seller = 'N/A'
+
+        if product.find('div', class_='SirUVb sh-img__image'):
             product_image_link = product.find(
-                'img', class_='s-image').get('src')
-        else:
-            product_image_link = 'N/A'
+                'div', class_='SirUVb sh-img__image').img.get('src')
 
-        if product.find('div', class_='a-row a-size-small'):
-            product_rating_div = product.find(
-                'div', class_='a-row a-size-small')
-            product_rating = product_rating_div.find(
-                'a', class_='a-popover-trigger a-declarative').text
-            product_rating = product_rating.split('out')
-            product_rating = product_rating[0]
-        else:
-            product_rating = 'N/A'
+        # if product.find('div', class_='a-row a-size-small'):
+        #     product_rating_div = product.find(
+        #         'div', class_='a-row a-size-small')
+        #     product_rating = product_rating_div.find(
+        #         'a', class_='a-popover-trigger a-declarative').text
+        #     product_rating = product_rating.split('out')
+        #     product_rating = product_rating[0]
+        # else:
+        #     product_rating = 'N/A'
 
-        if h2.a.get('href'):
-            product_link = 'https://www.amazon.in/' + h2.a.get('href')
+        if product.a.get('href'):
+            product_link = 'https://www.google.com/' + product.a.get('href')
         else:
             product_link = 'N/A'
 
-        # print(product_titles)
-        print(product_rating)
-        print('-------------')
-        print('-------------')
-        print('-------------')
-        # print(product_price)
-        # print(url)
-        # print(image_link)
+        print(product_title)
+        print(product_price)
+        print(product_link)
+        print(product_image_link)
+        print(product_seller)
+        print('----------')
+        print('----------')
 
-        total_products.append((product_titles, product_price,
-                               product_rating, product_link, product_image_link))
+        total_products.append((product_title, product_price,
+                               product_link, product_image_link, product_seller))
+
+    product_group = soup.find_all('div', class_='sh-dlr__list-result')
+    print(len(product_group))
+
+    # scraping middle sections products.
+    for product in product_group:
+
+        if product.find('div', 'IHk3ob'):
+            product_link = 'https://www.google.com/' + \
+                product.find('div', 'IHk3ob').a.get('href')
+        else:
+            product_link = 'N/A'
+
+        product_title = product.find('h3', class_='xsRiS').text
+
+        if product.find('span', class_='h1Wfwb O8U6h'):
+            product_price = product.find(
+                'span', class_='QIrs8').text
+            product_price = ''.join(product_price.split(','))
+        else:
+            product_price = 'N/A'
+
+        if product.find('div', class_='IHk3ob'):
+            product_seller = product.find('div', class_='IHk3ob').a.text
+        else:
+            product_seller = 'N/A'
+
+        if product.find('div', class_='JRlvE XNeeld'):
+            product_image_link = product.find(
+                'div', class_='JRlvE XNeeld').img.get('src')
+
+        total_products.append((product_title, product_price,
+                               product_link, product_image_link, product_seller))
+
+    sellerList = ['Amazon.in', 'Flipkart.in',
+                  'Reliance Digital', 'Hi laptop.com', 'TataCLiQ.com']
 
     stuff_for_frontend = {
         'search': search,
         'total_products': total_products,
+        'sellerList': sellerList,
     }
     return render(request, 'my_app/new_search.html', stuff_for_frontend)
 
-    # stuff_for_frontend = {
-    #     'search': 'hai',
-    #     'total_products': 'testing',
-    # }
-    # return render(request, 'checkout.html', stuff_for_frontend)
+
+# BASE_AMAZON_URL = 'https://www.amazon.in/s?k={}'
+# Amazon Scraping
+# def new_search(request):
+
+#     search = request.POST.get('searchBox')
+#     models.Search.objects.create(search=search)
+#     print(quote_plus(search))
+#     final_url = BASE_AMAZON_URL.format(quote_plus(search))
+#     print(final_url)
+
+#     options = Options()
+#     options.add_argument("--headless")
+
+#     CHROMEDRIVER = '/home/vigu/Downloads/chromedriver_linux64/chromedriver'
+#     browser = webdriver.Chrome(CHROMEDRIVER, options=options)
+#     browser.get(final_url)
+
+#     html = browser.page_source
+
+#     soup = BeautifulSoup(html, 'lxml')
+
+#     product_group = soup.find_all(
+#         'div', {'data-asin': True, 'data-component-type': 's-search-result'})
+#     print(len(product_group))
+
+#     total_products = []
+
+#     for product in product_group:
+#         # card.find('h2').text
+#         # print(card.h2.text)
+
+#         # image_link = card.find('div' , class_='a-section aok-relative s-image-fixed-height')
+
+#         # rating = card.find('i', class_='a-icon a-icon-star-small')
+
+#         # product_rating_div = card.find('div', class_='a-row a-size-small')
+
+#         h2 = product.h2  # to get h2 tag for a card (product block)
+
+#         product_titles = h2.text.strip()
+#         product_link = h2.a.get('href')
+
+#         if product.find('span', class_='a-price-whole'):
+#             product_price = product.find(
+#                 'span', class_='a-price-whole').text
+#             product_price = ''.join(product_price.split(','))
+#         else:
+#             product_price = 'N/A'
+
+#         if product.find('img', class_='s-image'):
+#             product_image_link = product.find(
+#                 'img', class_='s-image').get('src')
+#         else:
+#             product_image_link = 'N/A'
+
+#         if product.find('div', class_='a-row a-size-small'):
+#             product_rating_div = product.find(
+#                 'div', class_='a-row a-size-small')
+#             product_rating = product_rating_div.find(
+#                 'a', class_='a-popover-trigger a-declarative').text
+#             product_rating = product_rating.split('out')
+#             product_rating = product_rating[0]
+#         else:
+#             product_rating = 'N/A'
+
+#         if h2.a.get('href'):
+#             product_link = 'https://www.amazon.in/' + h2.a.get('href')
+#         else:
+#             product_link = 'N/A'
+
+#         # print(product_titles)
+#         print(product_rating)
+#         print('-------------')
+#         print('-------------')
+#         print('-------------')
+#         # print(product_price)
+#         # print(url)
+#         # print(image_link)
+
+#         total_products.append((product_titles, product_price,
+#                                product_rating, product_link, product_image_link))
+
+#     stuff_for_frontend = {
+#         'search': search,
+#         'total_products': total_products,
+#     }
+#     return render(request, 'my_app/new_search.html', stuff_for_frontend)
+
+#     # stuff_for_frontend = {
+#     #     'search': 'hai',
+#     #     'total_products': 'testing',
+#     # }
+#     # return render(request, 'checkout.html', stuff_for_frontend)
