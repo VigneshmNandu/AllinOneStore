@@ -545,6 +545,9 @@ def home(request):
     return render(request, 'base.html')
 
 
+# Scrape google shopping
+
+
 def new_search(request):
     search = request.POST.get('searchBox')
     models.Search.objects.create(search=search)
@@ -663,7 +666,7 @@ def new_search(request):
         total_products.append((product_title, product_price,
                                product_link, product_image_link, product_seller))
 
-    sellerList = ['Amazon.in', 'Flipkart.in',
+    sellerList = ['Amazon.in', 'Flipkart',
                   'Reliance Digital', 'Hi laptop.com', 'TataCLiQ.com']
 
     stuff_for_frontend = {
