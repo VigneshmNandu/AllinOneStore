@@ -21,6 +21,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, View
 
+from .myFunctions import checkSubStingFound
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
 
@@ -586,17 +587,6 @@ def new_search(request):
         else:
             product_price = 'N/A'
 
-        # if product.find('img', class_='s-image'):
-        #     product_image_link = product.find(
-        #         'img', class_='s-image').get('src')
-        # else:
-        #     product_image_link = 'N/A'
-
-        # if product.img.get('src'):
-        #     product_image_link = product.img.get('src')
-        # else:
-        #     product_image_link = 'N/A'
-
         if product.find('div', class_='sh-np__seller-container'):
             product_seller = product.find(
                 'div', class_='sh-np__seller-container').text
@@ -630,8 +620,10 @@ def new_search(request):
         print('----------')
         print('----------')
 
-        total_products.append((product_title, product_price,
-                               product_link, product_image_link, product_seller))
+        # checking if search result is present in product_title | if present then store to total_product
+        if checkSubStingFound(search, product_title):
+            total_products.append(
+                (product_title, product_price, product_link, product_image_link, product_seller))
 
     product_group = soup.find_all('div', class_='sh-dlr__list-result')
     print(len(product_group))
@@ -639,13 +631,13 @@ def new_search(request):
     # scraping middle sections products.
     for product in product_group:
 
+        product_title = product.find('h3', class_='xsRiS').text
+
         if product.find('div', 'IHk3ob'):
             product_link = 'https://www.google.com/' + \
                 product.find('div', 'IHk3ob').a.get('href')
         else:
             product_link = 'N/A'
-
-        product_title = product.find('h3', class_='xsRiS').text
 
         if product.find('span', class_='h1Wfwb O8U6h'):
             product_price = product.find(
@@ -663,8 +655,10 @@ def new_search(request):
             product_image_link = product.find(
                 'div', class_='JRlvE XNeeld').img.get('src')
 
-        total_products.append((product_title, product_price,
-                               product_link, product_image_link, product_seller))
+        # checking if search result is present in product_title | if present then store to total_product
+        if checkSubStingFound(search, product_title):
+            total_products.append(
+                (product_title, product_price, product_link, product_image_link, product_seller))
 
     sellerList = ['Amazon.in', 'Flipkart',
                   'Reliance Digital', 'Hi laptop.com', 'TataCLiQ.com']
