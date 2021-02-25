@@ -572,6 +572,7 @@ def new_search(request):
     print(len(product_group))
 
     total_products = []
+    sellerList = []
 
     # scraping top and bottom sections products
     for product in product_group:
@@ -625,6 +626,9 @@ def new_search(request):
             total_products.append(
                 (product_title, product_price, product_link, product_image_link, product_seller))
 
+        if product_seller not in sellerList:
+            sellerList.append(product_seller)
+
     product_group = soup.find_all('div', class_='sh-dlr__list-result')
     print(len(product_group))
 
@@ -660,8 +664,13 @@ def new_search(request):
             total_products.append(
                 (product_title, product_price, product_link, product_image_link, product_seller))
 
-    sellerList = ['Amazon.in', 'Flipkart',
-                  'Reliance Digital', 'Hi laptop.com', 'TataCLiQ.com']
+        if product_seller not in sellerList:
+            sellerList.append(product_seller)
+
+    # sellerList = ['Amazon.in', 'Flipkart',
+    #               'Reliance Digital', 'Hi laptop.com', 'TataCLiQ.com']
+
+    # print(sellerList)
 
     stuff_for_frontend = {
         'search': search,
