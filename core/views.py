@@ -633,9 +633,18 @@ def new_search(request):
     print(len(product_group))
 
     # scraping middle sections products.
+
+    # error in scrapping product title of midle section products so adding a try block
+
     for product in product_group:
 
-        product_title = product.find('h3', class_='xsRiS').text
+        try:
+            product_title = product.find('h3', class_='xsRiS').text
+        except:
+            break
+
+        # product_title = product.find('h3', class_='xsRiS').get_text()
+        # product_title = product_title_not_text.text
 
         if product.find('div', 'IHk3ob'):
             product_link = 'https://www.google.com/' + \
