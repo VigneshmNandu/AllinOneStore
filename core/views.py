@@ -620,14 +620,18 @@ def new_search(request):
         print(product_seller)
         print('----------')
         print('----------')
+        # print(total_products) #tuple inside a list
+        print('----------')
+        print('----------')
 
-        # checking if search result is present in product_title | if present then store to total_product
+        # checking if search result is present in product_title | if present then store to total_product (These products are shown as search result)
         if checkSubStingFound(search, product_title):
             total_products.append(
                 (product_title, product_price, product_link, product_image_link, product_seller))
 
-        if product_seller not in sellerList:
-            sellerList.append(product_seller)
+            # only append sellers who's products will be shown
+            if product_seller not in sellerList:
+                sellerList.append(product_seller)
 
     product_group = soup.find_all('div', class_='sh-dlr__list-result')
     print(len(product_group))
@@ -670,6 +674,7 @@ def new_search(request):
 
         # checking if search result is present in product_title | if present then store to total_product
         if checkSubStingFound(search, product_title):
+            # appending a tuple in a list
             total_products.append(
                 (product_title, product_price, product_link, product_image_link, product_seller))
 
@@ -683,7 +688,7 @@ def new_search(request):
 
     stuff_for_frontend = {
         'search': search,
-        'total_products': total_products,
+        'total_products': total_products,  # total_products = tuple inside a list
         'sellerList': sellerList,
     }
     return render(request, 'my_app/new_search.html', stuff_for_frontend)

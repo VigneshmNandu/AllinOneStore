@@ -26,6 +26,12 @@
 
 
 def checkSubStingFound(search, title):
+
+    """
+    This function is used for checking if each word in search is present in the product title
+    """
+
+
     # search = "Macbook pro M2"
     # title = "New Apple 13 Macbook Pro Gold- M1 chip (2020)"
 
@@ -46,7 +52,7 @@ def checkSubStingFound(search, title):
         return False
 
 
-# print(checkSubStingFound("Macbook air m1", "Macbook Apple air gold M1"))
+print(checkSubStingFound("Macbook air m1", "Macbook Apple air gold M1"))
 
 # search = "Asus vivobook"
 # title = "Asus Pentium Quad Core - 4 Gb/1 Tb Hdd/Windows 10 Home X543ma-gq1020t Laptop"
