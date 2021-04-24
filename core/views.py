@@ -397,7 +397,7 @@ def add_to_cart(request, slug):
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs[0]
-        # check if the order item is in the order (kart)
+        # check if the order item is in the order (cart)
         if order.items.filter(item__slug=item.slug).exists():
             order_item.quantity += 1
             order_item.save()
@@ -552,7 +552,7 @@ def home(request):
 def new_search(request):
     search = request.POST.get('searchBox')
     models.Search.objects.create(search=search)
-    print(quote_plus(search))
+    # print(quote_plus(search))
     final_url = BASE_AMAZON_URL.format(quote_plus(search))
     print(final_url)
 
