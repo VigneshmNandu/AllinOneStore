@@ -559,7 +559,7 @@ def new_search(request):
     options = Options()
     options.add_argument("--headless")
 
-    CHROMEDRIVER = '/home/vigu/Downloads/chromedriver_linux64/chromedriver'
+    CHROMEDRIVER = '/home/vigu/Downloads/chromedriver_linux64 (1)/chromedriver'
     browser = webdriver.Chrome(CHROMEDRIVER, options=options)
     browser.get(final_url)
 
