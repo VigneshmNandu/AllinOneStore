@@ -1,1 +1,3 @@
-web: gunicorn djecommerce.wsgi --log-file -
+web: gunicorn djecommerce.wsgi:application --log-file - --log-level debug
+python manage.py collectstatic --noinput
+manage.py migrate
