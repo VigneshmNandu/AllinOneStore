@@ -1,4 +1,4 @@
-import django_on_heroku
+# import django_on_heroku
 import os
 from decouple import config
 
@@ -72,7 +72,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_in_env')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+
+# heroku static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
 
 #  Add configuration for static files storage using whitenoise
@@ -93,7 +96,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 # adding scrapying
-STATIC_URL = '/static/'
-STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'),)
+# STATIC_URL = '/static/'
+# STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'),)
 
-django_on_heroku.settings(locals())
+# django_on_heroku.settings(locals())
