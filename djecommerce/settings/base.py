@@ -1,4 +1,4 @@
-# import django_on_heroku
+import django_on_heroku
 import os
 from decouple import config
 
@@ -100,4 +100,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # STATIC_URL = '/static/'
 # STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'),)
 
-# django_on_heroku.settings(locals())
+django_on_heroku.settings(locals())
