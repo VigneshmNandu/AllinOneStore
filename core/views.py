@@ -10,6 +10,8 @@ from selenium import webdriver
 import random
 import string
 
+import os
+
 import stripe
 from django.conf import settings
 from django.contrib import messages
@@ -556,11 +558,23 @@ def new_search(request):
     final_url = BASE_AMAZON_URL.format(quote_plus(search))
     print(final_url)
 
-    options = Options()
-    options.add_argument("--headless")
+    # options = Options()
+    # options.add_argument("--headless")
 
-    CHROMEDRIVER = '/home/vigu/Downloads/chromedriver_linux64 (1)/chromedriver'
-    browser = webdriver.Chrome(CHROMEDRIVER, options=options)
+    # CHROMEDRIVER = '/home/vigu/Downloads/chromedriver_linux64 (1)/chromedriver'
+    # browser = webdriver.Chrome(CHROMEDRIVER, options=options)
+    # browser.get(final_url)
+
+    # deploying in heroku
+
+    options = webdriver.ChromeOptions()
+    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-sh-usage")
+
+    browser = webdriver.Chrome(executable_path=os.environ.get(
+        "CHROMEDRIVER_PATH"), chrome_options=options)
     browser.get(final_url)
 
     html = browser.page_source

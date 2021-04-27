@@ -6,6 +6,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(
 
 SECRET_KEY = config('SECRET_KEY')
 
+ALLOWED_HOSTS = ['allinonestore.herokuapp.com', 'http://127.0.0.1:8000/']
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,6 +28,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -61,6 +64,9 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
+
+# heroku static files
+
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
